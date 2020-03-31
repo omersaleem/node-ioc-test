@@ -1,5 +1,5 @@
 {
-  "name": "node-renderer",
+  "name": "node-ioc-test",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,8 @@
     "test": "mocha",
     "debug": "babel-node --inspect-brk src/index.js"
   },
-  "author": "",
+  "author": "Omer Saleem",
+  "repository": "https://github.com/omersaleem/node-ioc-test",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.8.7",
