@@ -7,13 +7,13 @@ const regsitry = {
 const serviceInstances = {};
 
 export const Types = {
-  'SERVICE': 'service',
-  'MODEL': 'model'
+  SERVICE: 'service',
+  MODEL: 'model'
 };
 
 export const Errors = {
-  'TYPE_NOT_FOUND': 'TYPE_NOT_FOUND',
-  'MODULE_NOT_FOUND': 'MODULE_NOT_FOUND'
+  TYPE_NOT_FOUND: 'TYPE_NOT_FOUND',
+  MODULE_NOT_FOUND: 'MODULE_NOT_FOUND'
 };
 
 export const register = (type, moduleClass) => {
@@ -21,6 +21,11 @@ export const register = (type, moduleClass) => {
 }
 
 export const unregister = () => {}
+
+export const unregisterAll = () => {
+  regsitry.service = {};
+  regsitry.model = {};
+}
 
 export const createInstance = (type, moduleClass, params) => {
   if (type === Types.SERVICE) {
@@ -31,19 +36,22 @@ export const createInstance = (type, moduleClass, params) => {
     return serviceInstances[moduleId];
   } else {
     // Other types are not singletons
-    console.log('Creating', moduleClass.name);
+    console.log('Creating', moduleClass.name, regsitry[type]);
     const module = regsitry[type][moduleClass.name.toLowerCase()];
     return new module(params);
   }
 }
 
-export const inject = (key) => {
+export const inject = (key, params) => {
   console.log(`Injecting ${key}`);
   const typeKeyPair = key.split('::');
   const type = typeKeyPair[0];
   const module = typeKeyPair[1];
 
-  const modelClass = regsitry[type][module];
-  // @TODO handle not found
-  return createInstance(type, modelClass);
+  const moduleClass = regsitry[type][module];
+
+  if (!moduleClass) {
+    throw new Error(Errors.MODULE_NOT_FOUND);
+  }
+  return createInstance(type, moduleClass, params);
 }
